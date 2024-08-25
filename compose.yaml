@@ -1,19 +1,19 @@
+
+name: cctalk
+
 services:
   nacos:
     image: nacos/nacos-server:v2.2.0
-    restart: always
     environment:
       MODE: "standalone"
     ports:
       - '8848:8848'
       - '9848:9848'
     expose:
-      # Opens port 3306 on the container
       - '8848'
       - '9848'
   db:
     image: mysql:5.7
-    restart: always
     environment:
       MYSQL_DATABASE: 'db'
       # Password for root access
@@ -26,7 +26,22 @@ services:
       - '3306'
       # Where our data will be persisted
     volumes:
-      - my-db:/var/lib/mysql
-# Names our volume
-volumes:
-  my-db:
+      - ./mydata/mysql/log:/var/log/mysql
+      - ./mydata/mysql/data:/var/lib/mysql
+      - ./mydata/mysql/my.cnf:/etc/my.cnf
+  cache:
+    image: redis:latest
+    command: redis-server /etc/redis/redis.conf
+    ports:
+      # <Port exposed> : <MySQL Port running inside container>
+      - '6379:6379'
+    expose:
+      # Opens port 3306 on the container
+      - '6379'
+      # Where our data will be persisted
+    volumes:
+      - ./mydata/redis/data:/data
+      - ./mydata/redis/redis.conf:/etc/redis/redis.conf
+
+
+
