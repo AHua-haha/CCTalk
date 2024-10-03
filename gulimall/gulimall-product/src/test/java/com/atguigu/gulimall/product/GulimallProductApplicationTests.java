@@ -23,6 +23,11 @@ public class GulimallProductApplicationTests {
         brandEntity.setDescript("huawei");
         brandEntity.setName("huazi");
         brandService.save(brandEntity);
+        boolean res = brandService.getOptById(1).isPresent();
+        System.out.println(res);
+        res = brandService.getOptById(2).isPresent();
+        System.out.println(res);
+
         System.out.println("success");
     }
 
